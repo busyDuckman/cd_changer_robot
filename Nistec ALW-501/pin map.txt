@@ -1,0 +1,22 @@
+41 ^ tower right
+44 ^ tower left
+46   44?  on pos? front?
+
+47 cd droped
+39 ^ rotary pulse
+38 ^ left disk switch
+32 ^ left disk optical
+40 ^ cd on gripper
+30 ^ doors are open
+31 ^ right disk switch
+
+
+22  ?
+23  error light
+24  arm up
+25  arm left
+
+26  busy light
+27  gripper
+28  arm down
+29  arm right

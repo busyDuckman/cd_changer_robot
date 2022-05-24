@@ -1,0 +1,8 @@
+pyserial==3.4
+python-statemachine==0.7.1
+#pycdio
+pywin32
+python-slugify
+wmi
+opencv-python
+
