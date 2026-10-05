@@ -1,0 +1,17 @@
+# Normalise line endings to LF in the repo; checkout follows the local platform.
+* text=auto
+
+# Windows-only files keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# CAD files: never touch line endings (avoids whole-file diffs).
+*.dxf -text
+
+# Binary assets.
+*.3mf binary
+*.rar binary
+*.pdf binary
+*.jpg binary
+*.JPG binary
+*.png binary

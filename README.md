@@ -1,47 +1,42 @@
-<div align="center">
-
 # CD Changer Robot
 
-**A Nistec ALW-501 optical disk robot, I modernised and rebuilt as a bulk CD ripper.**
+**A Nistec ALW-501 optical disk robot I modernised and rebuilt as a bulk CD ripper.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.txt)
 [![Status: Mothballed](https://img.shields.io/badge/status-mothballed-lightgrey.svg)](#project-status)
 [![Python 3](https://img.shields.io/badge/python-3-blue.svg?logo=python&logoColor=white)](runner/)
 [![Arduino Mega](https://img.shields.io/badge/arduino-Mega%201280-00979D.svg?logo=arduino&logoColor=white)](firmware_megaatmega1280/)
 [![PlatformIO](https://img.shields.io/badge/built%20with-PlatformIO-orange.svg?logo=platformio&logoColor=white)](https://platformio.org/)
-[![Platform: Windows](https://img.shields.io/badge/ripping-Windows-0078D6.svg?logo=windows&logoColor=white)](runner/cd_drive.py)
-[![Last commit](https://img.shields.io/github/last-commit/busyDuckman/cd_changer_robot.svg)](https://github.com/busyDuckman/cd_changer_robot/commits/main)
 
-I bought this robot ina "parts only" condition of eBay for $50. It was a seriously well built bit of kit and worth the restore. I hope this repo may save someone else a heap of work.
+I bought this robot in "parts only" condition off eBay for $50. It was a seriously well-built bit of kit and worth the restore. I hope this repo may save someone else a heap of work.
   
 [![Watch the robot in action](youtube_thumbnail.jpg)](https://youtube.com/shorts/DimQMZp4Gug)
 
 *Click to watch it in action on YouTube.*
 
-</div>
 
 ---
 
 ## About
 
-I would routinely backup files to optical disk and toss them into a silo. One day I needed some old files and realised my computer does not
-even have a CD drive anymore. A thousand odd backup disks were degrading, so I did the only reasonable thing I knew how, I built a robot. 
+I would routinely back up files to optical disk and toss them into a silo. One day I needed some old files and realised my computer does not
+even have a CD drive anymore. A thousand-odd backup disks were degrading, so I did the only reasonable thing I knew how, I built a robot. 
 
-The first version was a home made arm, that worked, but did not have the reliability to scale. I saw that old CD burning robots were cheap and grabbed a Nistec ALW-501 of ebay. 
+The first version was a homemade arm that worked, but did not have the reliability to scale. I saw that old CD burning robots were cheap and grabbed a Nistec ALW-501 off eBay. 
 
-The original mobo on the unit appeared cooked and would not respond to commands. So I ditched it and reverse engineered the motor driver board. Then built a new mobo using an arduino, some Veroboard, and a few matching connectors. Then set up a python harness to run the thing from a PC.
+The original mobo on the unit appeared cooked and would not respond to commands. So I ditched it and reverse engineered the motor driver board. Then built a new mobo using an Arduino, some Veroboard, and a few matching connectors. Then set up a Python harness to run the thing from a PC.
 
 The robot has done its job and is being mothballed. This repo is here for anyone who wants to try a similar project, or who ends up inheriting the robot.
 
-**Note:** It's not shown in the video, but I added a 3d printable part a "CD sorter". using this The drop height at the done pile can be used to determine which of two piles a disk ends up in. The system is configured to use it, but if it is not present, then you just get one pile. 
+**Note:** It's not shown in the video, but I added a 3D printable part, a "CD sorter". Using this, the drop height at the done pile can be used to determine which of two piles a disk ends up in. The system is configured to use it, but if it is not present, then you just get one pile. 
 
 > [!TIP]
 > **Free to good home!** Do you know a good home for this device? A public library that wants to move its CD collection to cloud storage would be ideal.
 
 
 Features:
-  - Using an arduino to replace the existing motherboard.
-  - Python script rips disks to .iso images using CDBurnerXP or Anyburn
+  - Using an Arduino to replace the existing motherboard.
+  - Python script rips disks to .iso images using CDBurnerXP or AnyBurn.
   - Takes photos of disks before ripping using a webcam.
   - Places bad rips into a separate pile for data recovery.
 
@@ -146,7 +141,7 @@ flowchart LR
 
 ## Controller Circuit
 
-I used a Seeduino mega v1.1, and connected the IO via the dual row header
+I used a Seeeduino Mega v1.1, and connected the IO via the dual row header.
 
 
 ### Pin mapping: Arduino Mega to original driver board
@@ -165,7 +160,7 @@ The Arduino I/O pins are wired to the driver board as per:
 | 29 | Arm motor **right** | ARM_RIGHT_PIN |
 
 **Notes:**  
-  - Each motor axis has a pair of direction pins connected to a H-bridge on the driver board, best not drive both pins high at the same time :)
+  - Each motor axis has a pair of direction pins connected to an H-bridge on the driver board, best not to drive both pins high at the same time :)
   - All sensor inputs are active low.
   - Pickup works 80% of the time, so you need to check the gripper worked via the sensor and repeat the pickup process if it fails.
 
@@ -188,11 +183,11 @@ The Arduino I/O pins are wired to the driver board as per:
 The firmware polls pins 30-33 and 38-53 every 500 us on a timer interrupt and counts transitions on each one. You can see the live state of all of them with the who command or run.py --mode test_pins.
 
 > [!NOTE]
-> Still unknown: pin **22** and pin **46**. My unit had some damage, perhaps someone with an intact machine will find out whats up.
+> Still unknown: pin **22** and pin **46**. My unit had some damage, perhaps someone with an intact machine will find out what's up.
 
 ### Driver board reference
 
-[nistec_ALW_501/](nistec_ALW_501/) has a diagram of top and bottom traces on the OEM driver board ([reversed_driver_circuit.png](nistec_ALW_501/reversed_driver_circuit.png)), a matching photo of the PCB that it can overlay on. It also holds datasheets for the main components.
+[nistec_ALW_501/](nistec_ALW_501/) has a diagram of top and bottom traces on the OEM driver board ([reversed_driver_circuit.png](nistec_ALW_501/reversed_driver_circuit.png)), and a matching photo of the PCB that it can overlay on. It also holds datasheets for the main components.
 
 <a href="nistec_ALW_501/reversed_driver_circuit.png"><img src="nistec_ALW_501/reversed_driver_circuit.png" alt="Circuit routes" width="400"></a>
 
@@ -200,13 +195,12 @@ The firmware polls pins 30-33 and 38-53 every 500 us on a timer interrupt and co
 
 <a href="docs/arduino_harness_and_assembly/arduino_on_harness.jpg"><img src="docs/arduino_harness_and_assembly/arduino_on_harness.jpg" alt="Assembly Image" width="400"></a>
 
-docs\arduino_harness_and_assembly\arduino_on_harness.jpg
 
 
 ## Firmware control commands
 
 The new firmware (what I added, not the original unit) uses 9600 baud, newline-terminated text commands. 
-Every command returns either '_OK_' or '_FAIL_' when done. Before that arrives diagnostic output is  returned, always starting with 'info:' or 'error:'.
+Every command returns either '_OK_' or '_FAIL_' when done. Before that arrives, diagnostic output is returned, always starting with 'info:' or 'error:'.
 
 | Command | Action |
 | --- | --- |
@@ -226,7 +220,9 @@ Every command returns either '_OK_' or '_FAIL_' when done. Before that arrives d
 
 ### 1. Flash the firmware
 
-The firmware is a [PlatformIO](https://platformio.org/) project for an Arduino Mega 1280. It needs the **TimerOne** and **digitalWriteFast** libraries, which are bundled in [required_libraries.rar](firmware_megaatmega1280/required_libraries.rar).
+The firmware is a [PlatformIO](https://platformio.org/) project for an Arduino Mega 1280. It needs the **TimerOne** and **digitalWriteFast** libraries, which PlatformIO fetches automatically via `lib_deps`.
+
+A copy of the libraries is also kept in [required_libraries.rar](firmware_megaatmega1280/required_libraries.rar), just to be safe, so the firmware can still be recompiled if they ever disappear from the registry.
 
 ```bash
 cd firmware_megaatmega1280
@@ -259,7 +255,7 @@ See [runner/README.md](runner/README.md) for more detail.
 
 ## The CD sorter
 
-This nifty device gives you a extra end bay for free. Disks released above it slide away to a box you can store behind the machine. 
+This nifty device gives you an extra end bay for free. Disks released above it slide away to a box you can store behind the machine. 
 
 <a href="docs/cd_sorter.jpg"><img src="docs/cd_sorter.jpg" alt="CD sorter" width="400"></a>
 
