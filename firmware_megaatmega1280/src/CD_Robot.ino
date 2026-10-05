@@ -34,8 +34,8 @@ long timeOfNewState [numInputPins];
 
 //Debouncing method used:
 // -Any signal change with duration < commitTime, is ignored as noise
-// -Once the signal is recognised as real, any change occuring, before
-//  debounceTimetime has expired is ignored as bounce
+// -Once the signal is recognised as real, any change occurring, before
+//  debounceTime has expired is ignored as bounce
 int commitTime[numInputPins] = {};
 int debounceTime[numInputPins] = {};
 volatile bool anyChange;
@@ -145,7 +145,7 @@ void loop()
 
 	//readInputs();
 
-	//---------- debug sensor redings
+	//---------- debug sensor readings
 	//quickly get and reset the anychange flag.
 	bool sensorEvent;
 	noInterrupts();
@@ -178,7 +178,7 @@ bool updateAndPrintPinStates(bool onlyChanged, int specific_pin)
 
 		if((state != lastStateDelta[i]) || !onlyChanged)
 		{
-			//we detected a change, nb we will mis many that happen while executing a command
+			//we detected a change, nb we will miss many that happen while executing a command
 			//this is only a debug tool, to help develop the system
 			changeDetected = true;
 			outStream->print(F(" pin="));
@@ -199,10 +199,10 @@ bool updateAndPrintPinStates(bool onlyChanged, int specific_pin)
 
 
 	if(changeDetected) {
-		outStream->println("info: pin stage(s) changed");
+		outStream->println("info: pin state(s) changed");
 	}
 	else {
-			outStream->println("info: no pin stage(s) were changed");
+			outStream->println("info: no pin state(s) were changed");
 	}
 
 	return changeDetected;
@@ -247,7 +247,7 @@ void readInputs()
 	// 	}
 	// 	else
 	// 	{
-	// 		//time = 0 indicates a change is permisable (not in debounce)
+	// 		//time = 0 indicates a change is permissible (not in debounce)
 	// 		if(timeOfNewState[i] == 0)
 	// 		{
 	// 			//state yet to be altered
@@ -255,7 +255,7 @@ void readInputs()
 	// 		}
 	// 		else if(timeOfNewState[i] > commitTime[i])
 	// 		{
-	// 			//we have been consistantly in the state long enought to commit to it.
+	// 			//we have been consistently in the state long enough to commit to it.
 	// 			pulseCount[i]++;
 	// 			lastState[i] = state;
 	// 			anyChange = true;
@@ -272,10 +272,10 @@ void doHelpCmd(const char* cmd)
 {
 	outStream->println(F("Command Reference:"));
 	outStream->println(F("       help: this message"));
-	outStream->println(F("       grip: griper will hold disk"));
-	outStream->println(F("    release: griper wont hold disk"));
-	outStream->println(F("       drop: griper lets go of disk"));
-	outStream->println(F("             then retuns to grip state."));
+	outStream->println(F("       grip: gripper will hold disk"));
+	outStream->println(F("    release: gripper won't hold disk"));
+	outStream->println(F("       drop: gripper lets go of disk"));
+	outStream->println(F("             then returns to grip state."));
 	outStream->println(F("        up: jog arm up a bit."));
 	outStream->println(F("      down: jog arm down a bit."));
 	outStream->println(F("      left: jog arm left a bit."));

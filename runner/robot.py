@@ -188,9 +188,9 @@ class CDRobot(StateMachine):
         while True:
 
             print("## Waiting for disks.")
-            while not self.is_disk_in_stroage():
+            while not self.is_disk_in_storage():
                 time.sleep(2)
-                # if self.is_disk_in_stroage():
+                # if self.is_disk_in_storage():
 
             print("New disks found")
             self._do_new_disk_set_pause(5)
@@ -208,7 +208,7 @@ class CDRobot(StateMachine):
         return f"CD Robot ({self.ser.port}, arm_at={self.last_known_arm_pos})"
 
     # ------------------------------------------------------------------------------------------------------------------
-    # Serial comm's and parsing.
+    # Serial comms and parsing.
     # ------------------------------------------------------------------------------------------------------------------
     def _serial_write_line(self, s: str):
         # print(f"    sending cmd {s}")
@@ -251,7 +251,8 @@ class CDRobot(StateMachine):
         raise RobotFailedException(f"Invalid response for pin {pin}: {states}")
 
 
-    def list_pins(self, old_pins={}):
+    def list_pins(self, old_pins=None):
+        old_pins = old_pins or {}
         pins = {
             "cd_storage_sensor_pin": self.cd_storage_sensor_pin,
             "left_sensor_pin": self.left_sensor_pin,
@@ -324,7 +325,7 @@ class CDRobot(StateMachine):
     def do_command(self, cmd: str, time_out: int) -> List[str]:
         self._serial_write_line(cmd)
         try:
-            logging.comms("        Doing command: ", cmd)
+            logging.comms(f"        Doing command: {cmd}")
             ok, lines = self._get_robot_feedback(time_out)
             for line in lines:
                 logging.comms(f"          > {line}")
@@ -526,8 +527,8 @@ class CDRobot(StateMachine):
             print(f"spear big lift {i}: is_disk_on_gripper={self.is_disk_on_gripper()}")
             self.jog_up(1000)
             if not self.is_disk_on_gripper():
-                # sometimes the disk is in the gripper, but its not on strait and the sensor is not registering
-                print(f"spear, cd wobbled of sensor, or dropped {i}: is_disk_on_gripper={self.is_disk_on_gripper()}")
+                # sometimes the disk is in the gripper, but it's not on straight and the sensor is not registering
+                print(f"spear, cd wobbled off sensor, or dropped {i}: is_disk_on_gripper={self.is_disk_on_gripper()}")
                 self.drop()
                 self.jog_down(1100)
                 self.jog_up(1000)
@@ -543,11 +544,11 @@ class CDRobot(StateMachine):
         # # final test jog up
         # self.jog_up(1000)
         # if not self.is_disk_on_gripper():
-        #     # sometimes the dis is in the gripper, but its not on strait and the sensor is not registering
+        #     # sometimes the disk is in the gripper, but it's not on straight and the sensor is not registering
         #     self.drop()
 
         # lift up regardless
-        print(f"spear done, moving to to{i}: is_disk_on_gripper={self.is_disk_on_gripper()}")
+        print(f"spear done, moving to top {i}: is_disk_on_gripper={self.is_disk_on_gripper()}")
         self.do_top()
         if not self.is_disk_on_gripper():
             raise RobotFailedException("Unable to grab disk")
@@ -560,7 +561,7 @@ class CDRobot(StateMachine):
         #  pin=32 state=0, transitions=13
         return self.get_pin(self.cd_gripper_pin).low()
 
-    def is_disk_in_stroage(self):
+    def is_disk_in_storage(self):
         #  pin=32 state=0, transitions=13
         return self.get_pin(self.cd_storage_sensor_pin).low()
 
@@ -625,7 +626,7 @@ class CDRobot(StateMachine):
         self.set_vert_jog_dist(200)
         self.jog_down()
         self.do_top()
-        # we start in the middle because left sensor may be down with out the arm being fully left
+        # we start in the middle because left sensor may be down without the arm being fully left
         # (it needs an extra jog). This makes middle a good home position.
         # Also it makes loading disks easy.
         self.move_to_middle()
@@ -680,7 +681,7 @@ class CDRobot(StateMachine):
             cam_file = f"{volume_label}_SN{sn}_TS{ts}.jpg"
             cam_file = os.path.join(self.iso_folder, cam_file)
 
-            print("  - writing camera image to to", iso_file)
+            print("  - writing camera image to", cam_file)
             camera.save_image(self.camera_img, cam_file)
 
             print("  - writing optical disk image to", iso_file)

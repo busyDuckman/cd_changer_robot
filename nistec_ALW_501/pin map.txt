@@ -2,7 +2,7 @@
 44 ^ tower left
 46   44?  on pos? front?
 
-47 cd droped
+47 cd dropped
 39 ^ rotary pulse
 38 ^ left disk switch
 32 ^ left disk optical

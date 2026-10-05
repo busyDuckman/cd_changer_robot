@@ -17,6 +17,8 @@ def get_last_camera(max_cams_to_test=20):
         if cam is None:
             print("(not found)")
             return last_cam
+        if last_cam is not None:
+            last_cam.release()
         last_cam = cam
         print(cam)
     return last_cam
@@ -30,6 +32,7 @@ def get_camera(cam_num) -> VideoCapture:
         result, image = cam.read()
         if result:
             return cam
+        cam.release()
         return None
     except cv2.error:
         return None

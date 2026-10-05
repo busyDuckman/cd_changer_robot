@@ -5,6 +5,7 @@
 # See license.txt for license info.
 # ----------------------------------------------------------------------------------------
 import os
+import sys
 from functools import cache
 from time import sleep
 from datetime import datetime
@@ -12,7 +13,7 @@ from datetime import datetime
 @cache
 def is_windows():
     import platform
-    return "win" in platform.system().lower()
+    return platform.system() == "Windows"
 
 
 def get_win_drives():
@@ -96,6 +97,18 @@ def get_volume_label_and_sn(drive):
         raise ValueError("get_volume_label only supports windows at the moment.")
 
 
+# Characters cmd.exe treats specially. None of these appear in a drive letter or a slugified iso path.
+SHELL_METACHARS = set('&|<>^"%!`;$\r\n')
+
+
+def sanitise_shell_arg(arg: str) -> str:
+    """Guard for the os.system calls below: reject (don't silently alter) anything that could break out of the command."""
+    bad = SHELL_METACHARS.intersection(arg)
+    if bad:
+        raise ValueError(f"refusing to pass unsafe characters {sorted(bad)} to a shell command: {arg!r}")
+    return arg
+
+
 def make_iso_image_cdburnerxp(drive, iso_file, xp_dir = "C:\\Program Files\\CDBurnerXP"):
     if not is_windows():
         raise ValueError("make_iso_image_cdburnerxp only supported in windows")
@@ -112,10 +125,15 @@ def make_iso_image_cdburnerxp(drive, iso_file, xp_dir = "C:\\Program Files\\CDBu
 
     # "--burn-data -folder:F:\ -iso:C:\share\test_rip.iso -format:iso"
 
-    # subprocess.run([cdbxpcmd, "burn-data", f"folder:{drive}", f"iso:{iso_file}", "format:iso"])
+    
+    # security note: os.system will do fine given:
+    #   - subprocess.run did not work reliably. It probably should have; I don't have time to figure out what's up.
+    #   - these are my own disks, I know the cd labels are not adversarial.
+    drive = sanitise_shell_arg(drive)
+    iso_file = sanitise_shell_arg(iso_file)
     cmd = f'"{cdbxpcmd}" --burn-data -folder:{drive} -iso:{iso_file} -format:iso'
     print(f"  - executing: ", cmd)
-    os.system(cmd)
+    os.system(cmd)  # nosec B605 - args checked by sanitise_shell_arg(), see security note above
 
     # out = ""
     # if "occured while executing the command" in out:
@@ -138,10 +156,14 @@ def make_iso_image_anyburn(drive, iso_file, anyburn_dir = "C:\\Program Files\\An
     abcmd = os.path.join(anyburn_dir, "abcmd.exe")
     print(f"  - found anyburn: ", abcmd)
 
+    # security note: os.system will do fine given:
+    #   - subprocess.run did not work reliably. It probably should have; I don't have time to figure out what's up.
+    #   - these are my own disks, I know the cd labels are not adversarial.
     drive_letter = drive.upper()[0]
+    iso_file = sanitise_shell_arg(iso_file)
     cmd = f'"{abcmd}" make-image {drive_letter}: -y -o {iso_file.replace(".iso", ".bin")}'
     print(f"  - executing: ", cmd)
-    os.system(cmd)
+    os.system(cmd)  # nosec B605 - args checked by sanitise_shell_arg(), see security note above
 
     return True
 
@@ -152,6 +174,7 @@ def make_iso_image(drive, dest_iso_file):
     if is_windows():
         return make_iso_image_cdburnerxp(drive, dest_iso_file)
         # make_iso_image_anyburn(drive, dest_iso_file)
+    return False
 
 
 def is_disk_in_drive(drive):
@@ -185,7 +208,7 @@ def main():
 
     if len(drives) == 0:
         print("Exiting: no cd drives found.")
-        exit(0)
+        sys.exit(0)
 
     drive = drives[0]
     print("Using drive: ", drive)

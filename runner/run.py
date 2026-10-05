@@ -1,15 +1,16 @@
 # ----------------------------------------------------------------------------------------
-# Code to rum the customised Nistec ALW501 robot.
+# Code to run the customised Nistec ALW501 robot.
 #
 # Author: Warren Creemers
 # See license.txt for license info.
 # ----------------------------------------------------------------------------------------
 import argparse
+import sys
 import cd_drive
 from robot import CDRobot, RobotFailedException
 
 
-def parse_args(default_iso_path='C:\\share\cd_robot'):
+def parse_args(default_iso_path=r'C:\share\cd_robot'):
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', type=str, required=False, default='run',
                         help="mode[run, test_pins, calibrate_load, home].")
@@ -35,7 +36,7 @@ def init(iso_file_path) -> CDRobot:
     # find cd drive
     drives = cd_drive.detect_drives()
     if len(drives) == 0:
-        print("Error: Non cd-drive found.")
+        print("Error: No cd-drive found.")
         drive = None
     else:
         drive = drives[0]
@@ -43,7 +44,7 @@ def init(iso_file_path) -> CDRobot:
     ports = get_com_ports()
     if len(ports) == 0:
         print("No com ports found.")
-        exit(1)
+        sys.exit(1)
     cd_robot = None
     print("Looking for CD robot:  ")
     for port, _, _ in sorted(ports):
@@ -57,7 +58,7 @@ def init(iso_file_path) -> CDRobot:
 
     if cd_robot is None:
         print("Robot not found on any com ports.")
-        exit(1)
+        sys.exit(1)
 
     return cd_robot
 
@@ -106,7 +107,7 @@ def main():
     else:
         print("unknown mode: ", mode)
 
-    exit(0)
+    sys.exit(0)
 
 
 if __name__ == '__main__':

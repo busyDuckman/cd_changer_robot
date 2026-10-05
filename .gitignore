@@ -38,3 +38,7 @@ MANIFEST
 /firmware_megaatmega1280/src/CD_Robot.v11.suo
 /firmware_megaatmega1280/src/CD_Robot.vcxproj
 /firmware_megaatmega1280/src/CD_Robot.vcxproj.filters
+
+# python bytecode
+__pycache__/
+*.pyc

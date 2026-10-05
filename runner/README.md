@@ -25,7 +25,7 @@ Robot logic:
 
     MOVE home
     WHILE disk is in inbox (left spool):
-        photo-graph disk
+        photograph disk
         MOVE left
         MOVE pickup disk
         MOVE center
@@ -40,7 +40,7 @@ Robot logic:
         CD-DRIVE close
         IF read failed:
             MOVE down
-            Move drop disk   # disk falls through to reject tray
+            MOVE drop disk   # disk falls through to reject tray
         ELSE:
             MOVE right
             MOVE down
